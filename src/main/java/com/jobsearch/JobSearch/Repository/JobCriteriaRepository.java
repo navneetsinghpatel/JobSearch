@@ -12,10 +12,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Repository
 public class JobCriteriaRepository {
@@ -80,8 +77,8 @@ private final CriteriaBuilder criteriaBuilder;
                 );
             }else {
                 predicates.add(
-                        criteriaBuilder.like(jobRoot.get("company"),
-                                "%" + jobSearchCriteria.getCompany() + "%"
+                        criteriaBuilder.like(criteriaBuilder.lower(jobRoot.get("company")),
+                                "%" + jobSearchCriteria.getCompany().toLowerCase() + "%"
                         )
                 );
             }
@@ -95,8 +92,8 @@ private final CriteriaBuilder criteriaBuilder;
                 );
             }else {
                 predicates.add(
-                        criteriaBuilder.like(jobRoot.get("description"),
-                                "%" + jobSearchCriteria.getDescription() + "%"
+                        criteriaBuilder.like(criteriaBuilder.lower(jobRoot.get("description")),
+                                "%" + jobSearchCriteria.getDescription().toLowerCase() + "%"
                         )
                 );
             }
@@ -110,8 +107,8 @@ private final CriteriaBuilder criteriaBuilder;
                 );
             }else {
                 predicates.add(
-                        criteriaBuilder.like(jobRoot.get("experience"),
-                                "%" + jobSearchCriteria.getExperience() + "%"
+                        criteriaBuilder.like(criteriaBuilder.lower(jobRoot.get("experience")),
+                                "%" + jobSearchCriteria.getExperience().toLowerCase() + "%"
                         )
                 );
             }
@@ -125,8 +122,8 @@ private final CriteriaBuilder criteriaBuilder;
                 );
             }else {
                 predicates.add(
-                        criteriaBuilder.like(jobRoot.get("location"),
-                                "%" + jobSearchCriteria.getLocation() + "%"
+                        criteriaBuilder.like(criteriaBuilder.lower(jobRoot.get("location")),
+                                "%" + jobSearchCriteria.getLocation().toLowerCase() + "%"
                         )
                 );
             }
@@ -140,8 +137,8 @@ private final CriteriaBuilder criteriaBuilder;
                 );
             }else {
                 predicates.add(
-                        criteriaBuilder.like(jobRoot.get("type"),
-                                "%" + jobSearchCriteria.getType() + "%"
+                        criteriaBuilder.like(criteriaBuilder.lower(jobRoot.get("type")),
+                                "%" + jobSearchCriteria.getType().toLowerCase() + "%"
                         )
                 );
             }
@@ -154,7 +151,8 @@ private final CriteriaBuilder criteriaBuilder;
                         criteriaBuilder.isNotEmpty(jobRoot.get("skills"))
                 );
             }else {
-                for(String skill: jobSearchCriteria.getSkills()){
+
+                 for(String skill: jobSearchCriteria.getSkills()){
                     predicates.add(
                             criteriaBuilder.isMember(skill, jobRoot.get("skills"))
                     );

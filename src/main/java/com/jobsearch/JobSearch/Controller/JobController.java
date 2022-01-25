@@ -56,14 +56,19 @@ public class JobController {
     }
 
     @GetMapping("/searchJobs")
-    public ResponseEntity<Page<Job>> searchJobs(JobPage jobPage, JobSearchCriteria jobSearchCriteria){
+    public ResponseEntity<Object> searchJobs(JobPage jobPage, JobSearchCriteria jobSearchCriteria){
         /*if(jobSearchCriteria.getSkills()==null || jobSearchCriteria.getSkills().isEmpty()){
             throw new ApiRequestException("Require at least 1 skill to search jobs");
         }*/
-        if((jobSearchCriteria.getSkills()==null || jobSearchCriteria.getSkills().isEmpty()) && jobSearchCriteria.getLocation()==null && jobSearchCriteria.getExperience()==null && jobSearchCriteria.getDescription()==null && jobSearchCriteria.getCompany()==null && jobSearchCriteria.getType()==null){
+        if((jobSearchCriteria.getSkills()==null || jobSearchCriteria.getSkills().isEmpty()) && (jobSearchCriteria.getLocation()==null|| jobSearchCriteria.getLocation().isEmpty()) && (jobSearchCriteria.getExperience()==null || jobSearchCriteria.getExperience().isEmpty()) && (jobSearchCriteria.getDescription()==null || jobSearchCriteria.getDescription().isEmpty()) && (jobSearchCriteria.getCompany()==null || jobSearchCriteria.getCompany().isEmpty()) && (jobSearchCriteria.getType()==null || jobSearchCriteria.getType().isEmpty())){
             throw new ApiRequestException("Search Requires at least 1 search parameter!!");
         } else {
-            return new ResponseEntity<>(jobService.getJobs(jobPage, jobSearchCriteria), HttpStatus.OK);
+            Page newpPage = jobService.getJobs(jobPage, jobSearchCriteria);
+            if(!newpPage.hasContent()){
+                return new ResponseEntity<>("No Jobs found", HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>(jobService.getJobs(jobPage, jobSearchCriteria), HttpStatus.OK);
+            }
         }
 
     }
